@@ -1,0 +1,170 @@
+.job-form-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.job-form-modal {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.job-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  flex: 100%;
+}
+
+label {
+  font-weight: 600;
+  color: black;
+  margin-bottom: 8px;
+}
+
+.form-input,
+.form-dropdown,
+.form-textarea {
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s ease;
+  width: 80%;
+}
+
+.form-input:focus,
+.form-dropdown:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #5a2e91;
+  box-shadow: 0 0 0 3px rgba(90, 46, 145, 0.1);
+}
+
+.form-dropdown {
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+.salary-input-half {
+    padding: 12px;
+    width: 120px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s ease;
+  margin-right: 10px;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 70px;
+  width: 640px;
+  margin-bottom: 10px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.draft-btn,
+.publish-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.draft-btn {
+  background-color: #fff;
+  color: black;
+  margin-right: 400px;
+  border: 1px solid black;
+}
+
+.draft-btn:hover {
+  background-color: #f0e6ff;
+}
+
+.publish-btn {
+  background-color: #007bff; 
+  color: #fff;
+  margin-right: 30px;
+}
+
+.publish-btn:hover {
+  background-color: #432168;
+}
+
+@media (max-width: 768px) {
+  .job-form-modal {
+    width: 90%;
+    padding: 20px;
+  }
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-title {
+    font-size: 20px;
+  }
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .draft-btn,
+  .publish-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
