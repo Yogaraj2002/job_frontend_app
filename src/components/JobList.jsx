@@ -12,7 +12,7 @@ function JobList() {
   const API_URL = import.meta.env.VITE_API_URL;
 
 useEffect(() => {
-  fetch(`${API_BASE}/api/jobs`)
+  fetch(`${API_URL}/api/jobs`)
     .then(res => res.json())
     .then(data => {
       if (!Array.isArray(data)) {
@@ -23,7 +23,7 @@ useEffect(() => {
       }
     })
     .catch(err => console.error("Error fetching jobs:", err));
-}, [API_BASE]);
+}, [API_URL]);
 
   const handleSalaryChange = (e) => setSalaryRange(e.target.value);
 
