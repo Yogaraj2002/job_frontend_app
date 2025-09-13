@@ -5,8 +5,7 @@ import './JobForm.css';
 function JobForm({ onClose }) {
   const { register, handleSubmit } = useForm();
   const modalRef = useRef();
-   const API_URL = import.meta.env.VITE_API_URL;
-
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const onSubmit = async (data) => {
     const jobData = {
@@ -25,11 +24,15 @@ function JobForm({ onClose }) {
       if (response.ok) {
         alert("Job created successfully!");
         onClose();
+        window.location.reload(); // Refresh to show new job
       } else {
-        console.error("Failed to create job:", await response.json());
+        const errorData = await response.json();
+        console.error("Failed to create job:", errorData);
+        alert(`Failed to create job: ${errorData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      alert("Error submitting form. Please check your connection.");
     }
   };
 
@@ -49,18 +52,33 @@ function JobForm({ onClose }) {
           <div className="form-row">
             <div className="form-group">
               <label>Job Title</label>
-              <input type="text" {...register('jobTitle')} className="form-input" />
+              <input 
+                type="text" 
+                {...register('jobTitle', { required: true })} 
+                className="form-input" 
+                required
+              />
             </div>
             <div className="form-group">
               <label>Company Name</label>
-              <input type="text" {...register('companyName')} className="form-input" />
+              <input 
+                type="text" 
+                {...register('companyName', { required: true })} 
+                className="form-input" 
+                required
+              />
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
               <label>Location</label>
-              <input type="text" {...register('location')} className="form-input" />
+              <input 
+                type="text" 
+                {...register('location', { required: true })} 
+                className="form-input" 
+                required
+              />
             </div>
             <div className="form-group">
               <label>Job Type</label>
@@ -77,27 +95,49 @@ function JobForm({ onClose }) {
             <div className="form-group">
               <label>Salary Range</label>
               <div className="salary-inputs">
-                <input type="number" {...register('minSalary')} className="salary-input-half" placeholder="₹0 /Month"/>
-                <input type="number" {...register('maxSalary')} className="salary-input-half" placeholder="₹1,00,000 /Month"/>
+                <input 
+                  type="number" 
+                  {...register('minSalary')} 
+                  className="salary-input-half" 
+                  placeholder="₹0 /Month"
+                />
+                <input 
+                  type="number" 
+                  {...register('maxSalary')} 
+                  className="salary-input-half" 
+                  placeholder="₹1,00,000 /Month"
+                />
               </div>
             </div>
             <div className="form-group">
               <label>Application deadline</label>
-              <input type="date" {...register('applicationDeadline')} className="form-input"/>
+              <input 
+                type="date" 
+                {...register('applicationDeadline')} 
+                className="form-input"
+              />
             </div>
           </div>
 
           <div className="form-group full-width">
             <label>Job Description</label>
-            <textarea {...register('description')} className="form-textarea"></textarea>
+            <textarea 
+              {...register('description')} 
+              className="form-textarea"
+            ></textarea>
           </div>
           <div className="form-group full-width">
             <label>Experience</label>
-            <input type="text" {...register('experience')} className="form-input" placeholder="e.g., 2-4 years"/>
+            <input 
+              type="text" 
+              {...register('experience')} 
+              className="form-input" 
+              placeholder="e.g., 2-4 years"
+            />
           </div>
 
           <div className="form-actions">
-            <button type="button" className="draft-btn" onClick={onClose}>Save Draft</button>
+            <button type="button" className="draft-btn" onClick={onClose}>Cancel</button>
             <button type="submit" className="publish-btn">Publish</button>
           </div>
         </form>
