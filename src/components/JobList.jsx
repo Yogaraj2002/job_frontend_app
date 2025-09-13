@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import JobCard from '../components/JobCard';
 import './JobList.css';
-import { FaSearch, FaMapMarkerAlt, FaBriefcase, FaDollarSign } from 'react-icons/fa';
+import { FaSearch, FaMapMarkerAlt, FaBriefcase } from 'react-icons/fa';
 
 function JobList() {
   const [jobs, setJobs] = useState([]);
@@ -9,44 +9,36 @@ function JobList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [locationQuery, setLocationQuery] = useState('');
   const [jobType, setJobType] = useState('Job type');
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
   useEffect(() => {
-    fetch(`${API_BASE}/api/jobs`)
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return res.json();
-      })
+    fetch(`${API_URL}/api/jobs`)
+      .then(res => res.json())
       .then(data => setJobs(data))
       .catch(err => console.error("Error fetching jobs:", err));
-  }, []);
+  }, [API_URL]);
 
-  const handleSalaryChange = (e) => {
-    setSalaryRange(e.target.value);
-  };
+  const handleSalaryChange = (e) => setSalaryRange(e.target.value);
 
   const filteredJobs = jobs.filter(job => {
-  const matchesSearch =
-    job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    job.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-  const matchesLocation = job.location.toLowerCase().includes(locationQuery.toLowerCase());
+    const matchesLocation = job.location.toLowerCase().includes(locationQuery.toLowerCase());
 
-  const matchesJobType =
-    jobType === 'Job type' || job.jobType.toLowerCase() === jobType.toLowerCase();
+    const matchesJobType =
+      jobType === 'Job type' || job.jobType.toLowerCase() === jobType.toLowerCase();
 
+    const salaryMin = parseInt(job.salaryMin, 10) || 0;
+    const salaryMax = parseInt(job.salaryMax, 10) || Infinity;
+    const selectedMin = salaryRange * 1000; 
+    const selectedMax = (parseInt(salaryRange) + 20) * 1000;
 
-  const salaryMin = parseInt(job.salaryMin, 10);
-  const salaryMax = parseInt(job.salaryMax, 10);
-  const selectedMin = salaryRange * 1000; // slider in "k"
-  const selectedMax = (parseInt(salaryRange) + 20) * 1000;
+    const matchesSalary = salaryMin <= selectedMax && salaryMax >= selectedMin;
 
-  const matchesSalary = salaryMin <= selectedMax && salaryMax >= selectedMin;
-
-  return matchesSearch && matchesLocation && matchesJobType && matchesSalary;
-});
+    return matchesSearch && matchesLocation && matchesJobType && matchesSalary;
+  });
 
   return (
     <div className="job-list-page">
@@ -79,8 +71,8 @@ function JobList() {
             onChange={(e) => setJobType(e.target.value)}
           >
             <option value="Job type">Job type</option>
-            <option value="Fulltime">Full-time</option>
-            <option value="Parttime">Part-time</option>
+            <option value="FullTime">Full-time</option>
+            <option value="PartTime">Part-time</option>
             <option value="Contract">Contract</option>
             <option value="Internship">Internship</option>
           </select>
@@ -99,11 +91,10 @@ function JobList() {
           />
         </div>
       </div>
+
       <div className="job-cards-grid">
         {filteredJobs.length > 0 ? (
-          filteredJobs.map(job => (
-            <JobCard key={job.id} job={job} />
-          ))
+          filteredJobs.map(job => <JobCard key={job.id} job={job} />)
         ) : (
           <p>No jobs found matching your criteria.</p>
         )}
