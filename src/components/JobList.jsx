@@ -11,12 +11,19 @@ function JobList() {
   const [jobType, setJobType] = useState('Job type');
   const API_URL = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    fetch(`${API_URL}/api/jobs`)
-      .then(res => res.json())
-      .then(data => setJobs(data))
-      .catch(err => console.error("Error fetching jobs:", err));
-  }, [API_URL]);
+useEffect(() => {
+  fetch(`${API_BASE}/api/jobs`)
+    .then(res => res.json())
+    .then(data => {
+      if (!Array.isArray(data)) {
+        console.error("Backend did not return an array:", data);
+        setJobs([]); // prevent filter error
+      } else {
+        setJobs(data);
+      }
+    })
+    .catch(err => console.error("Error fetching jobs:", err));
+}, [API_BASE]);
 
   const handleSalaryChange = (e) => setSalaryRange(e.target.value);
 
