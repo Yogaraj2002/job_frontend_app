@@ -17,9 +17,10 @@ const JobCard = ({ job }) => (
       <span>{job.experience}</span>
       <span>{job.location}</span>
       <span>{job.jobType}</span>
-      <span>
-        <FaDollarSign className="meta-icon" /> {job.salary}
-      </span>
+     <span>
+  <FaDollarSign className="meta-icon" /> {job.salaryMin} - {job.salaryMax}
+</span>
+
     </div>
     <p className="job-description">{job.description}</p>
     <button onClick={apply} className="apply-btn">Apply Now</button>
