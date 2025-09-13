@@ -9,14 +9,23 @@ function JobList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [locationQuery, setLocationQuery] = useState('');
   const [jobType, setJobType] = useState('Job type');
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
+        setLoading(true);
         const response = await fetch(`${API_URL}/api/jobs`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
-
+        
         // Ensure data is always an array
         if (!Array.isArray(data)) {
           console.error("Backend did not return an array:", data);
@@ -26,7 +35,10 @@ function JobList() {
         }
       } catch (err) {
         console.error("Error fetching jobs:", err);
-        setJobs([]); // fallback to empty array
+        setError(err.message);
+        setJobs([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -36,7 +48,8 @@ function JobList() {
   const handleSalaryChange = (e) => setSalaryRange(e.target.value);
 
   const filteredJobs = jobs.filter(job => {
-    if (!job) return false; // skip null/undefined jobs
+    if (!job) return false;
+    
     const matchesSearch =
       (job.jobTitle || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (job.description || '').toLowerCase().includes(searchQuery.toLowerCase());
@@ -55,6 +68,19 @@ function JobList() {
 
     return matchesSearch && matchesLocation && matchesJobType && matchesSalary;
   });
+
+  if (loading) {
+    return <div className="loading">Loading jobs...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="error">
+        <p>Error loading jobs: {error}</p>
+        <p>Please check if the backend is running at {API_URL}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="job-list-page">
